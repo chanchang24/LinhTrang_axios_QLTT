@@ -22,7 +22,9 @@ Validator.prototype.kiemTraTK = function (id, value, spanID, mess) {
     })
 }
 Validator.prototype.kiemTraTen = function (value, spanID, mess) {
-    var regex = /^[a-zA-Z]*\s[a-zA-Z]*$/;
+    var regex = new RegExp("^[a-zA-Z_ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
+    "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
+    "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$");
     if (!regex.test(value)) {
         getEle(spanID).style.display = "block";
         getEle(spanID).innerHTML = mess;
