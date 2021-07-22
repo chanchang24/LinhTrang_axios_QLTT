@@ -7,6 +7,7 @@ function getEle(id) {
 
 var listUsers = function () {
     userService.layDS().then(function (result) {
+
         renderTable(result.data);
         setLocaleStorage(result.data);
     }).catch(function (error) {
@@ -36,8 +37,8 @@ function xemUser(id) {
         console.log(error);
     })
 }
-function capNhatUser(id){
-    userService.capNhatUser(id,thongTin()).then(function (){
+function capNhatUser(id) {
+    userService.capNhatUser(id, thongTin()).then(function () {
         listUsers();
         document.querySelector('.modal-content .close').click();
     }).catch(function (error) {
@@ -45,8 +46,9 @@ function capNhatUser(id){
     })
 }
 
-var thongTin = function(){
-    
+var thongTin = function () {
+    // var id = getEle('index').innerHTML;
+    // console.log(id);
     var taiKhoan = getEle('TaiKhoan').value;
     var hoTen = getEle('HoTen').value;
     var matKhau = getEle('MatKhau').value;
@@ -54,27 +56,45 @@ var thongTin = function(){
     var hinhAnh = getEle('HinhAnh').value;
     var loaiND = getEle('loaiNguoiDung').value;
     var ngonNgu = getEle('loaiNgonNgu').value;
+    console.log(ngonNgu)
     var moTa = getEle('MoTa').value;
 
     var user = new User(taiKhoan, hoTen, matKhau, email, loaiND, ngonNgu, moTa, hinhAnh);
     var isValid = true;
-    isValid &= valid.kiemTraRong(taiKhoan,'tbTaiKhoan','Tài khoản không được để trống')
-    
-    if(!isValid) return;
+    console.log(isValid);
+    isValid &= valid.kiemTraRong(taiKhoan, 'tbTK', 'Tài khoản không được để trống')
+    // &&  valid.kiemTraTK(id,taiKhoan,'tbTK','tài khoản đã tồn tại');   
+    isValid &= valid.kiemTraRong(hoTen, 'tbTen', 'Tên không được để trống')
+        && valid.kiemTraTen(hoTen, 'tbTen', 'Vui lòng nhập chữ');
+    isValid &= valid.kiemTraRong(matKhau, 'tbMatKhau', 'Mật khẩu không được để trống')
+        && valid.kiemTraMatKhau(matKhau, 'tbMatKhau', 'Vui lòng nhập 6-8 ký tự chứa ít nhất 1 ký tự số, 1 ký tự in hoa, 1 ký tự đặc biệt');
+    isValid &= valid.kiemTraRong(email, 'tbEmail', 'Email không được để trống')
+        && valid.kiemTraEmail(email, 'tbEmail', 'Vui lòng nhập đúng định dạng');
+    isValid &= valid.kiemTraRong(hinhAnh, 'tbHinhAnh', 'Hình ảnh không được để trống')
+    isValid &= valid.kiemTraND(loaiND, 'tbND', 'Vui lòng  chọn loại người dùng hợp lệ');
+    isValid &= valid.kiemTraNN(ngonNgu, 'tbNgonNgu', 'Vui lòng  chọn loại ngôn ngữ');
+    isValid &= valid.kiemTraRong(moTa, 'tbMoTa', 'Mô tả không được để trống')
+        && valid.kiemTraMoTa(moTa, 'tbMoTa', 'Vui lòng nhập không vượt quá 60 ký tự');
+    if (!isValid)
+        return;
     return user;
+
 
 }
 
-    
- 
-var themNguoiDung = function() {
-    
-    userService.addUser(thongTin()).then(function () {
-        getEle('formTT').reset();
-        listUsers();
-    }).catch(function (error) {
-        console.log(error);
-    })
+
+
+var themNguoiDung = function () {
+    if (thongTin() != undefined) {
+        userService.addUser(thongTin()).then(function () {
+            getEle('formTT').reset();
+            alert('Thêm thành công')
+            listUsers();
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
+
 }
 
 
@@ -97,7 +117,7 @@ var renderTable = function (arrayUser) {
     arrayUser.map(function (user, index) {
         content += `
             <tr>
-                <td>${index + 1}</td>
+                <td id="index">${index + 1}</td>
                 <td>${user.taiKhoan}</td>
                 <td>${user.matKhau}</td>
                 <td>${user.hoTen}</td>

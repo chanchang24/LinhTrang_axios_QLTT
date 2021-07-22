@@ -3,6 +3,7 @@ function userService() {
         return axios({
             url: 'https://60eea4afeb4c0a0017bf4558.mockapi.io/users',
             method: 'GET'
+            
         });
     }
 }
